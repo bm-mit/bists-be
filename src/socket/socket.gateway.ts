@@ -1,23 +1,23 @@
-import {
-  MessageBody,
-  SubscribeMessage,
-  WebSocketGateway,
-  WsResponse,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server } from 'socket.io';
 
 @WebSocketGateway()
 export class SocketGateway {
-  @SubscribeMessage('client')
-  handleClient(@MessageBody() body: string): WsResponse<unknown> {
+  @WebSocketServer()
+  server: Server;
+
+  sendData(data: any) {
     const event = 'client';
 
-    return { event, data: body };
+    this.server.emit(event, data);
   }
 
-  @SubscribeMessage('device')
-  handleDevice(@MessageBody() body: string): WsResponse<unknown> {
-    const event = 'device';
+  sendIndicators(data: any) {
+    const newData = {
+      time: new Date(),
+      indicators: data,
+    };
 
-    return { event, data: body };
+    this.sendData(newData);
   }
 }
