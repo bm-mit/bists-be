@@ -8,6 +8,7 @@ export class SocketGateway {
 
   sendData(data: any) {
     const event = 'client';
+    console.log(data);
 
     this.server.emit(event, data);
   }
@@ -15,7 +16,7 @@ export class SocketGateway {
   sendIndicators(data: any) {
     const newData = {
       time: new Date(),
-      indicators: data,
+      ...data,
     };
 
     this.sendData(newData);

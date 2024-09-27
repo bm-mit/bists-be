@@ -11,11 +11,15 @@ export class DevicesService {
     private devicesRepository: Repository<DeviceEntity>,
   ) {}
 
-  async register(device: RegisterDeviceDto) {
+  register(device: RegisterDeviceDto) {
     return this.devicesRepository.save(device);
   }
 
-  async findById(id: number) {
+  findById(id: number) {
     return this.devicesRepository.findOneBy({ id });
+  }
+
+  findAll() {
+    return this.devicesRepository.find();
   }
 }

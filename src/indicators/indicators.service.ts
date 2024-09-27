@@ -14,11 +14,10 @@ export class IndicatorsService {
     private devicesService: DevicesService,
   ) {}
 
-  uploadData(data: UploadDto) {
+  async uploadData(data: UploadDto) {
     this.verifyData(data.indicators);
 
-    if (!this.devicesService.findById(data.userId))
-      throw new UnauthorizedException('User not found');
+    await this.verifyDevice(data.deviceId);
     this.emitData(data);
   }
 
@@ -30,7 +29,17 @@ export class IndicatorsService {
     });
   }
 
-  emitData(data: UploadDto) {
-    this.socketGateway.sendIndicators(data);
+  async verifyDevice(deviceId: number) {
+    if (!(await this.devicesService.findById(deviceId)))
+      throw new UnauthorizedException('User not found');
+  }
+
+  async emitData(data: UploadDto) {
+    const result = {
+      indicators: data.indicators,
+      device: await this.devicesService.findById(data.deviceId),
+    };
+
+    this.socketGateway.sendIndicators(result);
   }
 }

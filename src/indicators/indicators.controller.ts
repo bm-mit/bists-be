@@ -7,7 +7,8 @@ export class IndicatorsController {
   constructor(private indicatorsService: IndicatorsService) {}
 
   @Post()
-  async uploadData(@Body() data: UploadDto) {
+  uploadData(@Body() data: UploadDto) {
+    console.log(data);
     return this.indicatorsService.uploadData(data);
   }
 }
